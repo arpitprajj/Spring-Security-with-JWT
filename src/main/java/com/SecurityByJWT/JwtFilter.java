@@ -1,6 +1,7 @@
 package com.SecurityByJWT;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,10 +30,26 @@ public class JwtFilter extends OncePerRequestFilter {
         String token = null;
         String username = null;
 
-        if (authHeader != null && authHeader.startsWith("Bearer ")) {
-            token = authHeader.substring(7);
-            username = jwtService.extractUserName(token);
+//        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+//            token = authHeader.substring(7);
+//            username = jwtService.extractUserName(token);
+//        }
+        System.out.println("goodd");
+        Cookie[] cookies = request.getCookies();
+        System.out.println("good2");
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                if ("jwt".equals(cookie.getName())) {
+                     token = cookie.getValue();
+                    System.out.println(token);
+                     //
+                    username = jwtService.extractUserName(token);
+                    System.out.println(username);
+                    break;
+                }
+            }
         }
+
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = context.getBean(MyUserDetails.class).loadUserByUsername(username);
@@ -44,6 +61,8 @@ public class JwtFilter extends OncePerRequestFilter {
             }
         }
 
-        filterChain.doFilter(request, response);
+
+
+
     }
 }

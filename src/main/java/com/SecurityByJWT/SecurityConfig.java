@@ -34,7 +34,7 @@ public class SecurityConfig {
         authorizeHttpRequests(request->request
         .requestMatchers("register","login").permitAll()
                 .requestMatchers("/admin/**").hasRole("ADMIN") // Endpoints accessible to ADMIN only
-                .requestMatchers("/home").hasAnyRole("USER") // Endpoints accessible to USER/STUDENT
+                .requestMatchers("/home").hasAnyRole("USER","ADMIN") // Endpoints accessible to USER/STUDENT
 
         .anyRequest().authenticated()).
                 httpBasic(Customizer.withDefaults()).

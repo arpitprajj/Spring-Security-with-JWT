@@ -24,8 +24,9 @@ public class UserController {
     public User createUser(@RequestBody User user){
         return this.userRepo.save(user);
     }
-    @GetMapping("csrf")
-    public CsrfToken getCsrfToken(HttpServletRequest request){
-        return (CsrfToken) request.getAttribute("_csrf");
+
+    @GetMapping("users/{id}")
+    public User getCsrfToken(@PathVariable Integer id){
+        return userRepo.findById(id).orElseThrow(()-> new RuntimeException("user not found"));
     }
 }
